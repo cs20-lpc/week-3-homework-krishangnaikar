@@ -1,29 +1,48 @@
 #ifndef LINKEDLIST_HPP
 #define LINKEDLIST_HPP
 
-#include "Student.hpp"
 #include <iostream>
 using namespace std;
 
+template <typename T>
 class LinkedList {
 private:
     struct Node {
-        Student data;
+        T data;
         Node* next;
-        Node(const Student& data) : data(data), next(nullptr) {}
+        Node(const T& data) : data(data), next(nullptr) {}
     };
     Node* head;
     int length;
-public:
-    LinkedList() : head(nullptr), length(0) {}
-    ~LinkedList() {
+
+    void copyFrom(const LinkedList& other) {
+        head = nullptr;
+        length = 0;
+        Node* curr = other.head;
+        while (curr != nullptr) {
+            append(curr->data);
+            curr = curr->next;
+        }
+    }
+
+    void clearNodes() {
         while (head != nullptr) {
             Node* temp = head;
             head = head->next;
             delete temp;
         }
+        length = 0;
     }
-    void append(const Student& data) {
+
+public:
+    LinkedList() : head(nullptr), length(0) {}
+    LinkedList(const LinkedList& other) : head(nullptr), length(0) {
+        copyFrom(other);
+    }
+    ~LinkedList() {
+        clearNodes();
+    }
+    void append(const T& data) {
         Node* newNode = new Node(data);
         if (head == nullptr) {
             head = newNode;
@@ -38,12 +57,11 @@ public:
         length++;
     }
 
-    int remove(int id) {        // position where it was removed
+    int remove(int id) {
         if (head == nullptr) {
             return -1;
         }
         
-        // Special case: removing head
         if (head->data.getId() == id) {
             Node* temp = head;
             head = head->next;
@@ -89,21 +107,44 @@ public:
         }
     }
 
-    int getLength() {
+    int getLength() const {
         return length;
     }
 
-    void addCourse(int id, Course course) {
-        Node* curr = head;
-        while (curr != nullptr) {
-            if (curr->data.getId() == id) {
-                curr->data.addCourse(course);
-                return;
-            }
-            curr = curr->next;
+
+    const T& get(int pos) const {
+        if (pos < 0 || pos >= length) {
+            throw out_of_range("Position out of bounds.");
         }
-        cout << "Student not found." << endl;
+        Node* curr = head;
+        for (int i = 0; i < pos; i++) curr = curr->next;
+        return curr->data;
     }
+
+    T& getRef(int pos) {
+        Node* curr = head;
+        for (int i = 0; i < pos; i++) curr = curr->next;
+        return curr->data;
+    }
+
+    const T& getRef(int pos) const {
+        Node* curr = head;
+        for (int i = 0; i < pos; i++) curr = curr->next;
+        return curr->data;
+    }
+
+    
+
+    LinkedList& operator=(const LinkedList& other) {
+        if (this != &other) {
+            clearNodes();
+            copyFrom(other);
+        }
+        return *this;
+    }
+
+
+
 };
 
 #endif

@@ -17,6 +17,7 @@ class Course {
         void setLocation(string location);
         string getCourse() const;
         string getLocation() const;
+        int getId() const;  // dummy function to satisfy LinkedList requirements
 
         friend std::ostream& operator<<(std::ostream& os, const Course& obj);
 

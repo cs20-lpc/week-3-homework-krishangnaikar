@@ -29,6 +29,11 @@ string Course::getLocation() const {
     return this->location;
 }
 
+int Course::getId() const
+{
+    return 0;
+}
+
 ostream& operator<<(ostream& os, const Course &obj) {
     os << obj.courseName << " " << obj.location;
     return os;

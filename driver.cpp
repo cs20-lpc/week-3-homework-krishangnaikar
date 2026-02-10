@@ -8,7 +8,7 @@ using namespace std;
 
 int main()
 {
-    LinkedList studentList;
+    LinkedList<Student> studentList;
     int choice;
     bool running = true;
 
@@ -23,11 +23,10 @@ int main()
         cout << "7. Exit\n";
         cout << "Enter choice: ";
         cin >> choice;
-        cin.ignore();  // ignore newline after choice
+        cin.ignore();
 
         switch (choice) {
             case 1: {
-                // Insert Student
                 int id;
                 string name;
                 float gpa;
@@ -43,11 +42,11 @@ int main()
 
                 Student newStudent(id, name, gpa);
                 studentList.append(newStudent);
-                cout << endl;
+                cout << "Student inserted.\n";
                 break;
             }
+
             case 2: {
-                // Delete Student
                 int id;
                 cout << "Enter ID to delete: ";
                 cin >> id;
@@ -61,8 +60,8 @@ int main()
                 }
                 break;
             }
+
             case 3: {
-                // Search Student
                 int id;
                 cout << "Enter ID to search: ";
                 cin >> id;
@@ -71,40 +70,52 @@ int main()
                 studentList.search(id);
                 break;
             }
+
             case 4: {
-                // Display All
                 cout << "\nStudents in List:\n";
                 studentList.display();
                 break;
             }
+
             case 5: {
-                // Count Students
                 cout << "Total students: " << studentList.getLength() << "\n";
                 break;
             }
+
             case 6: {
-                // Add a Course
                 int id;
                 string courseName, location;
 
-                cout << "Enter ID: ";
+                cout << "Enter Student ID: ";
                 cin >> id;
                 cin.ignore();
                 cout << "Enter Course Name: ";
                 getline(cin, courseName);
-                cout << "Enter location: ";
+                cout << "Enter Location: ";
                 getline(cin, location);
 
                 Course newCourse(courseName, location);
-                studentList.addCourse(id, newCourse);
+                bool found = false;
+                for (int i = 0; i < studentList.getLength(); i++) {
+                    if (studentList.getRef(i).getId() == id) {
+                        studentList.getRef(i).addCourse(newCourse);
+                        cout << "Course added.\n";
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found) cout << "Student not found.\n";
+
+
                 break;
             }
+
             case 7: {
-                // Exit
                 cout << "Exiting...\n";
                 running = false;
                 break;
             }
+
             default:
                 cout << "Invalid choice. Please try again.\n";
         }
